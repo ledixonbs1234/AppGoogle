@@ -1,9 +1,26 @@
+import 'package:app_google/blocs/bloc_auth/bloc_auth.dart';
+import 'package:app_google/helper/simple_delegate.dart';
+import 'package:app_google/repos/repo_user.dart';
+import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  BlocSupervisor.delegate = SimpleBlocDelegate();
+  final RepoUser repoUser = RepoUser();
+  runApp(
+    BlocProvider( 
+      create: (_) => BlocAuth(repoUser :repoUser)..add(AppStated()),
+      child: MyApp(repoUser: repoUser,)
+    )
+  );
+}
 
 class MyApp extends StatelessWidget {
+  final RepoUser _repoUser;
   // This widget is the root of your application.
+  MyApp({Key key,@required RepoUser repoUser}):assert(repoUser!= null),_repoUser =repoUser,super(key :key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
