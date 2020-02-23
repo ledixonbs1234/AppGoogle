@@ -1,6 +1,8 @@
 import 'package:app_google/blocs/bloc_auth/bloc_auth.dart';
 import 'package:app_google/helper/simple_delegate.dart';
 import 'package:app_google/repos/repo_user.dart';
+import 'package:app_google/views/page_home.dart';
+import 'package:app_google/views/page_splashscreen.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,35 +11,32 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   BlocSupervisor.delegate = SimpleBlocDelegate();
   final RepoUser repoUser = RepoUser();
-  runApp(
-    BlocProvider( 
-      create: (_) => BlocAuth(repoUser :repoUser)..add(AppStated()),
-      child: MyApp(repoUser: repoUser,)
-    )
-  );
+  runApp(BlocProvider(
+      create: (context) => BlocAuth(repoUser: repoUser)..add(AppStarted()),
+      child: MyApp(
+        repoUser: repoUser,
+      )));
 }
 
 class MyApp extends StatelessWidget {
   final RepoUser _repoUser;
   // This widget is the root of your application.
-  MyApp({Key key,@required RepoUser repoUser}):assert(repoUser!= null),_repoUser =repoUser,super(key :key);
+  MyApp({Key key, @required RepoUser repoUser})
+      : assert(repoUser != null),
+        _repoUser = repoUser,
+        super(key: key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: BlocBuilder<BlocAuth, StateAuth>(builder: (context, state) {
+        if(state is Uninitialized)
+          return SplashScreen();
+        else if (state is Authenticated){
+          return HomeScreen(name: state.displayName,);
+        }
+        else 
+          return Scaffold(body: Container(color:Colors.black),);
+      }),
     );
   }
 }

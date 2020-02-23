@@ -22,7 +22,7 @@ class BlocAuth extends Bloc<EventAuth, StateAuth> {
   Stream<StateAuth> mapEventToState(
     EventAuth event,
   ) async* {
-    if (event is AppStated) {
+    if (event is AppStarted) {
       yield* _mapAppStartToState();
     } else if (event is LoginIn) {
       yield* _mapLoginInToState();

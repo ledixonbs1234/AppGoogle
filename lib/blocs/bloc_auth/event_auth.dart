@@ -6,7 +6,7 @@ abstract class EventAuth extends Equatable {
   List<Object> get props => [];
 }
 
-class AppStated extends EventAuth {}
+class AppStarted extends EventAuth {}
 
 class LoginIn extends EventAuth {}
 
